@@ -45,13 +45,13 @@ Route::middleware([\App\Http\Middleware\CheckAuth::class])->group(function () {
     Route::get('/Utilisateurs/edit/{id}', [\App\Http\Controllers\UtilisateurController::class, 'edit'])->name('editUtilisateurs');
     Route::put('/Utilisateurs/update/{id}', [\App\Http\Controllers\UtilisateurController::class, 'update'])->name('updateUtilisateurs');
 
+    //Rapport et Statistique
+    Route::get('/RapportStatistique/presenceParEmploye', [\App\Http\Controllers\RapportStatistiqueController::class, 'presenceParEmploye'])->name('presenceParEmploye');
+    Route::get('/RapportStatistique/evolutionPresence', [\App\Http\Controllers\RapportStatistiqueController::class, 'evolutionPresences'])->name('evolutionPresences');
+
+
     //Accueil
     Route::get('/Accueil', function () {return view('Accueil');})->name('Accueil');
-
-    //Rapport et Statistique
-    Route::get('/RapportStatistique', function () {
-        return view('Accueil');
-    })->name('RapportStatistique');
 
 });
 

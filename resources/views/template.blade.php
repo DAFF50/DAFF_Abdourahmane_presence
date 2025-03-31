@@ -114,9 +114,17 @@
                             <a class="nav-link <?php echo !empty($dep)  ? "active" : ""  ?>"
                                href="{{ route('Departements') }}">Départements</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo !empty($rapport_statistique)  ? "active" : ""  ?>"
-                               href="{{ route('RapportStatistique') }}">Rapports et statistiques</a>
+
+                        <li class="nav-item dropdown @php  echo !empty($emar)  ? "active" : ""  @endphp">
+                            <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Rapports et statistiques
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item dropdown" href="{{ route('presenceParEmploye') }}">présences par employé</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('evolutionPresences')}}">Évolution des présences </a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('addEmargements')}}">Taux de présence par service</a></li>
+                            </ul>
                         </li>
                     @endif
                 </ul>

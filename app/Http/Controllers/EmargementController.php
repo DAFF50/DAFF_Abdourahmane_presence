@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Emargement;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Excel;
