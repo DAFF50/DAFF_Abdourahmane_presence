@@ -48,7 +48,7 @@ Route::middleware([\App\Http\Middleware\CheckAuth::class])->group(function () {
     //Rapport et Statistique
     Route::get('/RapportStatistique/presenceParEmploye', [\App\Http\Controllers\RapportStatistiqueController::class, 'presenceParEmploye'])->name('presenceParEmploye');
     Route::get('/RapportStatistique/evolutionPresence', [\App\Http\Controllers\RapportStatistiqueController::class, 'evolutionPresences'])->name('evolutionPresences');
-
+    Route::get('/RapportStatistique/tauxPresenceService', [\App\Http\Controllers\RapportStatistiqueController::class, 'tauxPresenceParService'])->name('tauxPresenceParService');
 
     //Accueil
     Route::get('/Accueil', function () {return view('Accueil');})->name('Accueil');

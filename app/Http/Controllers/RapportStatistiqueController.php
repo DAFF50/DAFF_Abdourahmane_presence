@@ -85,4 +85,37 @@ class RapportStatistiqueController extends Controller
 
         return view('RapportsStatistiques.evolutionPresences', compact('labels', 'values', 'periode'));
     }
+
+    public function tauxPresenceParService()
+    {
+        // 1. Récupérer le nombre total de présences par service
+        $presencesParService = Emargement::where('status', 'Présent')
+            ->join('utilisateurs', 'emargements.utilisateur_id', '=', 'utilisateurs.id')
+            ->join('services', 'utilisateurs.service_id', '=', 'services.id')
+            ->selectRaw('services.libelle as libelle, COUNT(*) as total_presences')
+            ->groupBy('services.libelle')  // Utilisez libelle si c'est le nom correct
+            ->orderBy('total_presences', 'desc')
+            ->get();
+
+        // 2. Récupérer le nombre total d'émargements (pour calculer les pourcentages)
+        $totalEmargements = Emargement::count();
+
+        // 3. Préparer les données pour le graphique
+        $services = [];
+        $tauxPresence = [];
+        $couleurs = [];
+
+        foreach ($presencesParService as $service) {
+            $services[] = $service->libelle;
+            $tauxPresence[] = $totalEmargements > 0 ? round(($service->total_presences / $totalEmargements) * 100, 2) : 0;
+            $couleurs[] = $this->genererCouleurAleatoire();
+        }
+
+        return view('RapportsStatistiques.tauxPresenceService', compact('services', 'tauxPresence', 'couleurs'));
+    }
+
+    private function genererCouleurAleatoire()
+    {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
 }

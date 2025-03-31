@@ -123,7 +123,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item dropdown" href="{{ route('presenceParEmploye') }}">présences par employé</a></li>
                                 <li><a class="dropdown-item dropdown" href="{{route('evolutionPresences')}}">Évolution des présences </a></li>
-                                <li><a class="dropdown-item dropdown" href="{{route('addEmargements')}}">Taux de présence par service</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('tauxPresenceParService')}}">Taux de présence par service</a></li>
                             </ul>
                         </li>
                     @endif
