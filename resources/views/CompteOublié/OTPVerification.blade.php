@@ -260,8 +260,12 @@
         }
 
         @keyframes blink-caret {
-            from, to { opacity: 0 }
-            50% { opacity: 1 }
+            from, to {
+                opacity: 0
+            }
+            50% {
+                opacity: 1
+            }
         }
     </style>
 </head>
@@ -269,25 +273,26 @@
 
 <div class="container">
     <div class="form-container sign-in-container">
-        <form method="post" action="{{route('login')}}">
+        <form method="post" action="{{route('VerifyCode')}}">
             @csrf
             @method('post')
             @if (session('messageerror'))
                 <h4 style="color: red">{{ session('messageerror') }}</h4>
             @endif
-            <h1 class="h1C">Se connecter</h1>
-            <input type="text" name="email" placeholder="Email"
-                   class="form-control @error('email') is-invalid @enderror"/>
-            @error('email')
+            <h1 class="h1C">Entrez le code de vérification</h1>
+            <div class="d-flex justify-content-center gap-2" style="margin: 10px auto;">
+                @for ($i = 0; $i < 6; $i++)
+                    <input type="text" name="otp[]" maxlength="1"
+                           class="form-control text-center otp-input"
+                           style="width: 40px; height: 40px; font-size: 18px; padding: 0; text-align: center;">
+                @endfor
+            </div>
+            @error('otp')
             <span class="text-danger"> {{$message}}</span>
             @enderror
-            <input type="password" name="password" placeholder="Password"
-                   class="form-control @error('password') is-invalid @enderror"/>
-            @error('password')
-            <span class="text-danger"> {{$message}}</span>
-            @enderror
-            <a href="#">Mot de passe oublié?</a>
-            <button type="submit">Connexion</button>
+            <div id="countdown" style="font-weight: bold; color: #007eb6;"></div>
+            <p>Veuillez saisir le code à 6 chiffres envoyé à votre adresse email.</p>
+            <button type="submit">Vérifier</button>
         </form>
     </div>
 
@@ -305,7 +310,37 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        const expiresAt = new Date("{{ \Carbon\Carbon::parse(session('otp_expires_at'))->format('Y-m-d H:i:s') }}").getTime();
+        const countdownElement = document.getElementById('countdown');
+
+        const interval = setInterval(function () {
+            const now = new Date().getTime();
+            const distance = expiresAt - now;
+
+            if (distance <= 0) {
+                clearInterval(interval);
+                countdownElement.innerHTML = `
+                    <a href="{{route('renvoyerCode')}}" style="color: #007eb6; font-weight: bold;">Renvoyer le code</a>
+                `;
+            } else {
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                let countdownText = "Code expire dans : ";
+                if (minutes > 0) {
+                    countdownText += `${minutes}m `;
+                }
+                countdownText += `${seconds}s`;
+
+                countdownElement.innerHTML = countdownText;
+            }
+        }, 1000);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         const messages = [
             "Accédez à notre plateforme en ligne",
             "Gérez facilement vos émargements ",
@@ -357,6 +392,21 @@
 
         // Démarrer après 1s (pour l'effet initial)
         setTimeout(typeWriter, 1000);
+    });
+</script>
+<script>
+    document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+        input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
     });
 </script>
 

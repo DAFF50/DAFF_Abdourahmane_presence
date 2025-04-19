@@ -1,4 +1,5 @@
-@extends('template')
+@php $rap = true @endphp
+@extends('template.template')
 
 @section('content')
     <div class="container">
@@ -11,7 +12,8 @@
                         <div class="col-md-4">
                             <select name="periode" class="form-select" onchange="this.form.submit()">
                                 <option value="jour" {{ $periode == 'jour' ? 'selected' : '' }}>Par jour</option>
-                                <option value="semaine" {{ $periode == 'semaine' ? 'selected' : '' }}>Par semaine</option>
+                                <option value="semaine" {{ $periode == 'semaine' ? 'selected' : '' }}>Par semaine
+                                </option>
                                 <option value="mois" {{ $periode == 'mois' ? 'selected' : '' }}>Par mois</option>
                             </select>
                         </div>
@@ -31,7 +33,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('evolutionChart').getContext('2d');
 
             new Chart(ctx, {
@@ -53,7 +55,7 @@
                     plugins: {
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return `${context.dataset.label}: ${context.raw}`;
                                 }
                             }

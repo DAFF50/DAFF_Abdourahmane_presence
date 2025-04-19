@@ -24,13 +24,15 @@ class AuthentificationController extends Controller
             Session::put('user_nom', $user->nom);
             Session::put('user_prenom', $user->prenom);
             Session::put('user_role', $user->role);
-            Session::put('user_service', $user->service->libelle);
-            Session::put('user_departement', $user->service->departement->libelle);
-
+            Session::put('user_service', $user->service->libelle ?? 'Aucun');
+            Session::put('user_departement', $user->service->departement->libelle ?? 'Aucun');
+            Session::put('created_at', $user->created_at);
+            Session::put('user_password', $user->password);
             return to_route('Accueil');
         }
         return back()->with('messageerror', 'Email ou mot de passe incorrect.');
     }
+
     public function logout()
     {
         Session::flush();

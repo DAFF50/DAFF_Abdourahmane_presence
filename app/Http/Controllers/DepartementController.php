@@ -77,6 +77,10 @@ class DepartementController extends Controller
      */
     public function destroy(string $id)
     {
+        $servicesCount = Service::where('departement_id', $id)->count();
+        if($servicesCount > 0){
+            return  redirect("Departements")->with("messageerror","Impossible de supprimer ce département car il contient de(s) service(s)!");
+        }
         Departement::destroy([$id]);
         return  redirect("Departements")->with("message","Departement supprimé avec succés..");
     }

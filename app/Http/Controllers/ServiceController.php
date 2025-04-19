@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departement;
 use App\Models\service;
 use App\Models\Service as ModelsService;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -14,9 +15,10 @@ class ServiceController extends Controller
      */
     public function index()
     {
+
         $departements = Departement::all();
         $services = Service::paginate(3);
-        return view('Services.list',compact('services', 'departements'));
+        return view('Services.list', compact('services', 'departements'));
     }
 
     /**
@@ -42,7 +44,7 @@ class ServiceController extends Controller
         $service->libelle = $request['libelle'];
         $service->departement_id = $request['departement_id'];
         $service->save();
-        return redirect("Services")->with("message","Nouveau service créer avec succés");
+        return redirect("Services")->with("message", "Nouveau service créer avec succés");
         //to_route('Services');
     }
 
@@ -61,7 +63,7 @@ class ServiceController extends Controller
     {
         $departements = Departement::all();
         $service = Service::find($id);
-        return view('Services.add',compact('service', 'departements'));
+        return view('Services.add', compact('service', 'departements'));
     }
 
     /**
@@ -77,7 +79,7 @@ class ServiceController extends Controller
         $service->libelle = $request['libelle'];
         $service->departement_id = $request['departement_id'];
         $service->save();
-        return  redirect("Services")->with("message","service modifié avec succés..");
+        return redirect("Services")->with("message", "service modifié avec succés..");
     }
 
     /**
@@ -85,7 +87,31 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
+        $utilisateursCount = Utilisateur::where('service_id', $id)->count();
+        if ($utilisateursCount > 0) {
+            return redirect("Services")->with("messageerror", "Impossible car ce service contient de(s) utilisateur(s)!");
+        }
         Service::destroy([$id]);
-        return  redirect("Services")->with("message","Service supprimé avec succés..");
+        return redirect("Services")->with("message", "Service supprimé avec succés..");
+    }
+
+    public function gestionEmploye()
+    {
+        $employes = Utilisateur::where('role', 'Employe')->get();
+        $services = Service::all();
+        return view('Services.attributionEmploye', compact('services', 'employes'));
+    }
+
+    public function updateEmploye(Request $request)
+    {
+        $request->validate([
+            'employeId' => 'required',
+            'service_id' => 'required',
+        ]);
+
+        $employe = Utilisateur::find($request['employeId']);
+        $employe->service_id = $request['service_id'];
+        $employe->save();
+        return redirect("Services/Employe")->with("message", "Attribution d'un service à un employé reussi! ");
     }
 }

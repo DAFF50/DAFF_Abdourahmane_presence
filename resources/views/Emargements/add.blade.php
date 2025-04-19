@@ -1,7 +1,7 @@
 <?php
 $emar = true;
 ?>
-@extends('template')
+@extends('template.template')
 @section('content')
     <h3>Vos émargements du mois</h3><br>
     <div class="row">
@@ -67,13 +67,15 @@ $emar = true;
                                     data-bs-target="#emargementmodal">Émarger
                             </button>
                         @elseif($date->isPast())
-                            <div class="text-muted">Jour passé</div>
+                            @if($checkEmargement == false)
+                                <span class="badge bg-danger">Absent</span>
+                            @endif
                         @else
                             <div class="text-muted">À venir</div>
                         @endif
                         @if($checkEmargement == true)
                             <span
-                                class="badge {{$checkStatus == "Présent" ? 'bg-success' : 'bg-danger'}}">{{$checkStatus}}</span>
+                                class="badge {{$checkStatus == "Présent" ? 'bg-success' : 'bg-primary'}}">{{$checkStatus}}</span>
                         @endif
                     </div>
                 </div>

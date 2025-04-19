@@ -1,7 +1,7 @@
 @php
     $users = true;
 @endphp
-@extends('template')
+@extends('template.template')
 @section('content')
     <h2>{{$utilisateur->id ? 'Modifier les informations de l\'utilisateur' : 'Ajouter un nouveau utilisateur'}}</h2>
     <form method="POST"
@@ -38,61 +38,34 @@
                     @enderror
                 </div>
 
-                <!-- Row pour les champs Role et Département -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Role</label>
-                        <select name="role" class="form-select @error('role') is-invalid @enderror"
-                                aria-label="Default select example">
-                            @if(!$utilisateur->id)
-                                <option value="" selected disabled>Sélectionner...</option>
+                <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select @error('role') is-invalid @enderror"
+                            aria-label="Default select example">
+                        @if(!$utilisateur->id)
+                            <option value="" selected disabled>Sélectionner...</option>
+                            <option value="Administrateur">Administrateur</option>
+                            <option value="Gestionnaire">Gestionnaire</option>
+                            <option value="Employe">Employe</option>
+                        @else
+                            <option value="{{ $utilisateur->role }}">{{ $utilisateur->role }}</option>
+                            @if($utilisateur->role != "Administrateur")
                                 <option value="Administrateur">Administrateur</option>
+                            @endif
+                            @if($utilisateur->role != "Gestionnaire")
                                 <option value="Gestionnaire">Gestionnaire</option>
+                            @endif
+                            @if($utilisateur->role != "Employe")
                                 <option value="Employe">Employe</option>
-                            @else
-                                <option value="{{ $utilisateur->role }}">{{ $utilisateur->role }}</option>
-                                @if($utilisateur->role != "Administrateur")
-                                    <option value="Administrateur">Administrateur</option>
-                                @endif
-                                @if($utilisateur->role != "Gestionnaire")
-                                    <option value="Gestionnaire">Gestionnaire</option>
-                                @endif
-                                @if($utilisateur->role != "Employe")
-                                    <option value="Employe">Employe</option>
-                                @endif
                             @endif
-                        </select>
-                        @error('role')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Service</label>
-                        <select name="service" class="form-select @error('service') is-invalid @enderror"
-                                aria-label="Default select example">
-                            @if(!$utilisateur->id)
-                                <option value="" selected disabled>Sélectionner...</option>
-                                @foreach($services as $s)
-                                    <option value="{{$s->id}}">{{$s->libelle}}</option>
-                                @endforeach
-                            @else
-                                <option
-                                    value="{{$utilisateur->service_id}}">{{$utilisateur->service->libelle}}</option>
-                                @foreach($services as $s)
-                                    @if($utilisateur->service_id!= $s->id)
-                                        <option value="{{$s->id}}">{{$s->libelle}}</option>
-                                    @endif
-                                @endforeach
-                            @endif
-                        </select>
-                        @error('service')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
+                        @endif
+                    </select>
+                    @error('role')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-5">{{ $utilisateur->id ? "Modifier" : "Ajouter" }}</button>
+            <button type="submit" class="btn btn-primary mt-3">{{ $utilisateur->id ? "Modifier" : "Ajouter" }}</button>
         </div>
     </form>
 @endsection

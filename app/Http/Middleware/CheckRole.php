@@ -6,20 +6,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAuth
+class CheckRole
 {
     /**
      * Handle an incoming request.
      *
-     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        if (!session()->has('user_id')) {
-            return redirect('/')->with('messageerror', 'Authentification obligatoire !');
+        if (session('user_role') == "Employe" ) {
+            return response()->view('errors.403', [], 403);
         }
-
         return $next($request);
     }
 }

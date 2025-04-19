@@ -60,6 +60,12 @@
             color: rgb(0, 126, 182);
         }
 
+        .profil {
+            color: #FFFFFF;
+            margin-right: 30px;
+            font-size: 13px;
+        }
+
     </style>
 
     <!-- Custom styles for this template -->
@@ -71,7 +77,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top  test">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('Accueil') }}">ISI Présence</a>
+            <a class="navbar-brand" href="{{ route('Accueil') }}" style="font-weight: bold">ISI Présence</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -79,57 +85,90 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo !empty($accueil)  ? "active" : ""  ?>" aria-current="page"
+                        <a class="nav-link " style="{{!empty($accueil)  ? 'color: white; font-weight: bold;' : '' }}"
+                           aria-current="page"
                            href="{{ route('Accueil') }}">Accueil</a>
                     </li>
                     @if(session('user_role') == "Administrateur")
                         <li class="nav-item">
-                            <a class="nav-link <?php echo !empty($users)  ? "active" : ""  ?>"
+                            <a class="nav-link " style="{{!empty($users) ? 'color: white; font-weight: bold;' : '' }}"
                                href="{{ route('Utilisateurs') }}">Utilisateurs</a>
                         </li>
                     @endif
                     @if(session('user_role') != "Employe")
                         <li class="nav-item">
-                            <a class="nav-link @php echo !empty($emar)  ? "active" : "" @endphp"
+                            <a class="nav-link " style="{{!empty($emar)  ? 'color: white; font-weight: bold;' : '' }}"
                                href="{{ route('Emargements') }}">Emargements</a>
                         </li>
-                    @elseif(session('user_role') == "Employe")
-                        <li class="nav-item dropdown @php  echo !empty($emar)  ? "active" : ""  @endphp">
+                    @else
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
+                               aria-expanded="false"
+                               style="{{!empty($emar)  ? 'color: white; font-weight: bold;' : '' }}">
                                 Emargements
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item dropdown" href="{{ route('Emargements') }}">Historique</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{ route('Emargements') }}">Historique</a>
+                                </li>
                                 <li><a class="dropdown-item dropdown" href="{{route('addEmargements')}}">Emargé</a></li>
                             </ul>
                         </li>
                     @endif
                     @if(session('user_role') != "Employe")
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo !empty($serv)  ? "active" : ""  ?>"
-                               href="{{ route('Services') }}">Services</a>
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false"
+                               style="{{!empty($serv)  ? 'color: white; font-weight: bold;' : '' }}">
+                                Services
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item dropdown" href="{{ route('Services') }}">Gestion des
+                                        services</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('gestionEmploye')}}">Attribution des
+                                        services</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo !empty($dep)  ? "active" : ""  ?>"
+                            <a class="nav-link " style="{{!empty($dep)  ? 'color: white; font-weight: bold;' : '' }}"
                                href="{{ route('Departements') }}">Départements</a>
                         </li>
-
-                        <li class="nav-item dropdown @php  echo !empty($emar)  ? "active" : ""  @endphp">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
+                               aria-expanded="false"
+                               style="{{!empty($rap)  ? 'color: white; font-weight: bold;' : '' }}">
                                 Rapports et statistiques
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item dropdown" href="{{ route('presenceParEmploye') }}">présences par employé</a></li>
-                                <li><a class="dropdown-item dropdown" href="{{route('evolutionPresences')}}">Évolution des présences </a></li>
-                                <li><a class="dropdown-item dropdown" href="{{route('tauxPresenceParService')}}">Taux de présence par service</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{ route('presenceParEmploye') }}">présences
+                                        par employé</a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('evolutionPresences')}}">Évolution
+                                        des présences </a></li>
+                                <li><a class="dropdown-item dropdown" href="{{route('tauxPresenceParService')}}">Taux de
+                                        présence par service</a></li>
                             </ul>
                         </li>
                     @endif
                 </ul>
+
+                <a href="{{route('Settings')}}" class="nav-link " style="color: white; font-weight: bold;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" class="bi bi-gear-fill me-2" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </a>
+
+                <div class="profil">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
+                         class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        <path fill-rule="evenodd"
+                              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                    </svg>
+                    <span style="font-weight: bold">
+                        {{ session('user_role') }}
+                    </span>
+                </div>
                 <button class="btn btn-outline-light mt-1" type="submit" data-bs-toggle="modal"
-                        data-bs-target="#logoutmodal">Se déconnecter
+                        data-bs-target="#logoutmodal" style="font-weight: bold">Se déconnecter
                 </button>
             </div>
         </div>

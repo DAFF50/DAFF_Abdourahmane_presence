@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Excel;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class EmargementController extends Controller
 {
@@ -42,6 +43,32 @@ class EmargementController extends Controller
         $emargement->status = "En attente";
         $emargement->utilisateur_id = session('user_id');
         $emargement->save();
+
+        // Envoi d'email avec PHPMailer
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = 'in-v3.mailjet.com'; // Remplacez par votre serveur SMTP
+            $mail->SMTPAuth = true;
+            $mail->Username = 'f4dfe8514f40b252a6cd2c9eb6a78084';
+            $mail->Password = '7a0a7e12f4e9c534b21593d284ed3a0b';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Expéditeur et destinataire
+            $mail->setFrom('ISIedusup@gmail.com', "Institut supérieur d'infotmatique");
+            $mail->addAddress($emargement->utilisateur->email, $emargement->utilisateur->prenom . ' ' . $emargement->utilisateur->nom);
+
+            // Contenu de l'email
+            $mail->isHTML(true);
+            $mail->Subject = 'Nouvel Emargement';
+            $mail->Body = view('Emails.emailsNewEmargement', ['emargement' => $emargement])->render();
+            $mail->CharSet = 'UTF-8';
+            $mail->send();
+        } catch (Exception $e) {
+            return redirect("Utilisateurs")->with("error", "Emargement éffectué, mais email non envoyé. Erreur : {$mail->ErrorInfo}");
+        }
+
         return redirect("Emargements")->with("message","Votre émargement à été lancé avec succés, en attente de validation, merci!");
         //to_route('Services');
     }
@@ -74,6 +101,30 @@ class EmargementController extends Controller
         $emargement = Emargement::find($id);
         $emargement->status = "Présent";
         $emargement->save();
+        // Envoi d'email avec PHPMailer
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = 'in-v3.mailjet.com'; // Remplacez par votre serveur SMTP
+            $mail->SMTPAuth = true;
+            $mail->Username = 'f4dfe8514f40b252a6cd2c9eb6a78084';
+            $mail->Password = '7a0a7e12f4e9c534b21593d284ed3a0b';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Expéditeur et destinataire
+            $mail->setFrom('ISIedusup@gmail.com', "Institut supérieur d'infotmatique");
+            $mail->addAddress($emargement->utilisateur->email, $emargement->utilisateur->prenom . ' ' . $emargement->utilisateur->nom);
+
+            // Contenu de l'email
+            $mail->isHTML(true);
+            $mail->Subject = 'Emargement validé';
+            $mail->Body = view('Emails.emailsValidateEmargement', ['emargement' => $emargement])->render();
+            $mail->CharSet = 'UTF-8';
+            $mail->send();
+        } catch (Exception $e) {
+            return redirect("Emargments")->with("error", "Emargement Validé, mais email non envoyé. Erreur : {$mail->ErrorInfo}");
+        }
         return  redirect("Emargements")->with("message","Emargement validé avec succés..");
     }
     public function invalider(string $id)
@@ -91,7 +142,6 @@ class EmargementController extends Controller
     {
         //
     }
-
     public function exportPdf()
     {
         $emargements = Emargement::orderBy('date', 'desc')->get();

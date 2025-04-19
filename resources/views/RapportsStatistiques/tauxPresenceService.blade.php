@@ -1,4 +1,5 @@
-@extends('template')
+@php $rap = true @endphp
+@extends('template.template')
 
 @section('content')
     <div class="container">
@@ -33,7 +34,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('doughnutChart').getContext('2d');
 
             new Chart(ctx, {
@@ -55,7 +56,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return `${context.label}: ${context.raw}%`;
                                 }
                             }

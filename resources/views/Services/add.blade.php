@@ -1,7 +1,7 @@
 <?php
 $serv = true;
 ?>
-@extends('template')
+@extends('template.template')
 @section('content')
     <form method="POST" action="{{route($service->id ? 'updateServices' : 'saveServices', $service->id)}}">
         @csrf

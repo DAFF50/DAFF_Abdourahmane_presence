@@ -98,7 +98,11 @@ class RapportStatistiqueController extends Controller
             ->get();
 
         // 2. Récupérer le nombre total d'émargements (pour calculer les pourcentages)
-        $totalEmargements = Emargement::count();
+        $totalEmargements = Emargement::where('status', 'Présent')
+            ->join('utilisateurs', 'emargements.utilisateur_id', '=', 'utilisateurs.id')
+            ->join('services', 'utilisateurs.service_id', '=', 'services.id')
+            ->count();
+
 
         // 3. Préparer les données pour le graphique
         $services = [];
